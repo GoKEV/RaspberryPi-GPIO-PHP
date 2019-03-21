@@ -1,4 +1,5 @@
 <?php
+error_reporting( error_reporting() & ~E_NOTICE );
 
 /*
 
@@ -17,10 +18,14 @@
 */
 
 $devices = array(
-	'Button One' => '0',
-	'Button Two' => '1',
-	'Button Three' => '2',
-	'Button Four' => '3',
+	'Button One [11]' => '0',
+	'Button Two [12]' => '1',
+	'Button Three [13]' => '2',
+	'Button Four [15]' => '3',
+	'Button Five [16]' => '4',
+	'Button Six [18]' => '5',
+	'Button Seven [22]' => '6',
+	'Button Eight [7]' => '7',
 );
 
 /*
@@ -58,6 +63,7 @@ switch ($_REQUEST['op']) {
 		init_gpio($devices);
 		$content = get_list($devices);
 		$content .= show_gpio_graphic();
+
 // Comment out the show_gpio_graphic line above to hid the graphic from the web page
 		break;
 }
@@ -173,9 +179,13 @@ function show_gpio_graphic(){
 			<li>Pin 12: Blue (trigger for relay 2 -- GPIO 1)
 			<li>Pin 13: Blue (trigger for relay 3 -- GPIO 2)
 			<li>Pin 15: Blue (trigger for relay 4 -- GPIO 3)
+			<li>Pin 16: Blue (trigger for relay 5 -- GPIO 4)
+			<li>Pin 18: Blue (trigger for relay 6 -- GPIO 5)
+			<li>Pin 22: Blue (trigger for relay 7 -- GPIO 6)
+			<li>Pin 7: Blue (trigger for relay 8 -- GPIO 7)
 			<br><br>
 			<img src="RaspberryPiPinout.png"><br>
-			To remove this graphic and text, comment out the call on line 60:<br>
+			To remove this graphic and text, comment out the call on line 65:<br>
 			<b>\$out .= show_gpio_graphic();</b><br><br>
 			Like this!<br>
 
