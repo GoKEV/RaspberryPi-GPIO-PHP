@@ -1,5 +1,5 @@
 ---
-- name: Deploy the Raspberry Pi PHP interface to a Pi
+- name: Deploy the Raspberry Pi PHP GPIO interface to a Pi
   hosts: mypi
   become: yes
 
@@ -9,6 +9,7 @@
       name: "{{ packages }}"
     vars:
       packages:
+      - python-apt
       - apache2
       - php
       - wiringpi

@@ -41,3 +41,16 @@ sudo update-rc.d apache2 enable 3 4 5
 mv index.php /var/www/html/
 mv on.png /var/www/html/
 mv off.png /var/www/html/
+
+
+
+
+################################################################################
+##	To fully purge the old packages, try these on uninstall.
+##	I removed apach2 and php to run the playbook again and
+##	deleted my modified config files -- they were not automatically
+##	recreated by apt until I purged using these commands:
+################################################################################
+sudo apt-get purge apache2*
+sudo apt-get purge php*
+
