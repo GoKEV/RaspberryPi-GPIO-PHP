@@ -1,0 +1,50 @@
+---
+- name: Deploy the Raspberry Pi PHP interface to a Pi
+  hosts: mypi
+  become: yes
+
+  tasks:
+  - name: Install a list of packages
+    apt:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - apache2
+      - php
+      - wiringpi
+
+  - name: Copy the files into the web directory
+    copy:
+      src: "files/{{ item }}"
+      dest: "/var/www/html/{{ item }}"
+      owner: pi
+      group: pi
+      mode: 644
+    with_items:
+      - index.php
+      - on.png
+      - off.png
+      - RaspberryPiPinout.png
+
+  - name: Remove the ugly default index.html page
+    file:
+      dest: /var/www/html/index.html
+      state: absent
+
+  - name: Fix the apache2 conf to servce up index.php as the main page
+    lineinfile:
+      path: /etc/apache2/apache2.conf
+      insertafter: '^<Directory /var/www/>'
+      line: '        DirectoryIndex index.php'
+
+  - name: Fix the apache2 conf to servce up index.php as the main page
+    lineinfile:
+      path: /etc/php/7.0/apache2/php.ini
+      regexp: '^short_open_tag = Off'
+      line: 'short_open_tag = On'
+
+  - name: Enable apache2 service and make sure it is started
+    service:
+      name: apache2
+      enabled: yes
+      state: restarted
