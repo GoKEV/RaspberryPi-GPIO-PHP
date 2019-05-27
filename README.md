@@ -37,7 +37,7 @@ ansible-playbook -i mypi.hosts installer.yml
 
   - this is what the web interface looks like when you access the page (locally or remotely)
 
-<img src="files/GPIO-index.png?raw=true" width="150"><br>
+<img src="files/GPIO-indexpage.png?raw=true" width="150"><br>
 
   - the same status can be validated from the command line as so:
 ```
