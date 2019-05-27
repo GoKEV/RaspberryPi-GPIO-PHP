@@ -41,13 +41,21 @@ ansible-playbook -i mypi.hosts installer.yml
 
   - the same status can be validated from the command line as so:
 </pre>
+
 pi@raspberrypi:~ $ gpio read 0
+
 1
+
 pi@raspberrypi:~ $ gpio read 1
+
 0
+
 pi@raspberrypi:~ $ gpio read 2
+
 1
+
 pi@raspberrypi:~ $ 
+
 </pre>
 
 ## GPIO from DWAB
