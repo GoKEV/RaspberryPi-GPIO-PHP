@@ -7,12 +7,17 @@
   - name: Install a list of packages
     apt:
       name: "{{ packages }}"
+      dpkg_options: 'force-confold,force-confdef,dist-upgrade'
+      install_recommends: yes
+      force: yes
     vars:
       packages:
       - python-apt
       - apache2
       - php
       - wiringpi
+
+
 
   - name: Copy the files into the web directory
     copy:
