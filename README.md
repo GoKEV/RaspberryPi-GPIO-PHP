@@ -37,11 +37,24 @@ ansible-playbook -i mypi.hosts installer.yml
 
   - this is what the web interface looks like when you access the page (locally or remotely)
 
-![GPIO-index.png](files/GPIO-index.png?raw=true "GPIO-index.png")
+![GPIO-index.png](files/GPIO-index.png?raw=true "GPIO-index.png" | width=150)
+
+  - the same status can be validated from the command line as so:
+</pre>
+pi@raspberrypi:~ $ gpio read 0
+1
+pi@raspberrypi:~ $ gpio read 1
+0
+pi@raspberrypi:~ $ gpio read 2
+1
+pi@raspberrypi:~ $ 
+</pre>
+
+## GPIO from DWAB
 
   - this includes a screen shot of some of the GPIO pinouts explained
 
-![RaspberryPiPinout.png](files/RaspberryPiPinout.png?raw=true "RaspberryPiPinout.png")
+![RaspberryPiPinout.png](files/RaspberryPiPinout.png?raw=true "RaspberryPiPinout.png" | width=150)
 
 
 
