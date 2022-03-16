@@ -12,25 +12,28 @@
       force: yes
     vars:
       packages:
-      - python-apt
       - apache2
       - php
-      - wiringpi
 
+  - name: Sync the web directory
+    synchronize:
+      src: files/html/
+      dest: /var/www/html/
+      recursive: yes
+    become: true
 
+  - name: Sync the WiringPi directory
+    synchronize:
+      src: files/WiringPi/
+      dest: /root/WiringPi/
+      recursive: yes
+    become: true
 
-  - name: Copy the files into the web directory
-    copy:
-      src: "files/{{ item }}"
-      dest: "/var/www/html/{{ item }}"
-      owner: pi
-      group: pi
-      mode: 644
-    with_items:
-      - index.php
-      - on.png
-      - off.png
-      - RaspberryPiPinout.png
+  - name: Build WiringPi from source
+    shell:
+      cmd: ./build
+      chdir: /root/WiringPi
+    become: true
 
   - name: Remove the ugly default index.html page
     file:
@@ -42,12 +45,6 @@
       path: /etc/apache2/apache2.conf
       insertafter: '^<Directory /var/www/>'
       line: '        DirectoryIndex index.php'
-
-  - name: Fix the apache2 conf to servce up index.php as the main page
-    lineinfile:
-      path: /etc/php/7.0/apache2/php.ini
-      regexp: '^short_open_tag = Off'
-      line: 'short_open_tag = On'
 
   - name: Enable apache2 service and make sure it is started
     service:
