@@ -56,7 +56,9 @@ pi@raspberrypi:~ $
 
 ![RaspberryPiPinout.png](files/RaspberryPiPinout.png?raw=true "RaspberryPiPinout.png")
 
-The GPIO pinout apparently differs for WiringPi.  To see the pins on your exact board, log on to your Pi and type this:
+The GPIO pinout apparently differs for WiringPi (the app we use to interact with the GPIO).
+To see the pins on your exact board, log on to your Pi and type this:
+
 <pre>
 root@raspberrypi# gpio readall
  +-----+-----+---------+------+---+---Pi 3B+-+---+------+---------+-----+-----+
@@ -86,7 +88,8 @@ root@raspberrypi# gpio readall
  | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
  +-----+-----+---------+------+---+---Pi 3B+-+---+------+---------+-----+-----+
 
-As we see above, Physical pin 11 is GPIO0.  This matches the graphic above.  Apparently other applications use different pinout, but this is what works on my Pi 3B+
+As we see above, Physical pin 11 is GPIO0.  This matches the graphic above.
+Many other graphics indicate a different pinout, but this is what works on my Pi 3B+ and WiringPi
 
 </pre>
 
