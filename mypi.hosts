@@ -1,2 +1,2 @@
 [mypi]
-10.0.0.24 ansible_user=pi ansible_password=raspberry
+10.200.10.30 ansible_user=pi ansible_password=raspberry
