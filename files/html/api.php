@@ -30,6 +30,12 @@ switch ($_REQUEST['op']) {
 		$html = $result[button];
 		$content = json_encode($result,JSON_PRETTY_PRINT);
 		break;
+	case "buttonrewrite":
+		$rewrite = parse_rewrite($_SERVER['REQUEST_URI']);
+		$result = make_button($rewrite[1],$rewrite[2],$rewrite[3]);
+		$html = $result[button] . "$rewrite[1],$rewrite[2],$rewrite[3]";
+		$content = json_encode($result,JSON_PRETTY_PRINT);
+		break;
 	case "rewrite":
 		$rewrite = parse_rewrite($_SERVER['REQUEST_URI']);
 		switch ($rewrite[0]) {
@@ -54,7 +60,7 @@ switch ($_REQUEST['op']) {
 		break;
 }
 
-if (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) {
+if ( (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) and ($_REQUEST['op'] != "buttonrewrite") ){
 	// we are requesting this exact page
 	header('Content-type: text/javascript');
 	print $content;
@@ -187,7 +193,7 @@ function make_button($io,$value="",$w="150"){
 
         $result[io] = $io;
         $result[state] = gpio_getval($io);
-	$result[led] = ($result[state] == 0 ? "red_off.png" : "red_on.png");
+	$result[led] = ($result[state] == 0 ? "/red_off.png" : "/red_on.png");
 	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=button" . "&value=" . $result[nextstate] . "&w=" . $w;
 	$result[link] .= ( isset($input[delay]) ? "&delay=" . $input[delay] : "");
 
