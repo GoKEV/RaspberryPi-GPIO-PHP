@@ -6,8 +6,9 @@ RewriteEngine on
 RewriteCond $1 !^(index\.php|api\.php|iframe\.php|assets|robots\.txt|favicon\.ico)
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^api/.*$ /api.php/?op=rewrite
-RewriteRule ^button/.*$ /api.php/?op=buttonrewrite
+RewriteRule ^read/.*$ /api.php/?op=read
+RewriteRule ^write/.*$ /api.php/?op=write
+RewriteRule ^button/.*$ /api.php/?op=button
 
 </IfModule>
 

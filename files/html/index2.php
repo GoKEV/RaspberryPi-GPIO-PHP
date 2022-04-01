@@ -53,7 +53,7 @@ $button[3] = array(
 /////////////////////////////////////////////////////////////////////
 
 ?>
-<table border="1" valign="top" cellpadding="10">
+<table border="0" valign="top" cellpadding="10">
 <?php
 
 foreach( $button as $var => $vals){
@@ -73,22 +73,14 @@ foreach( $button as $var => $vals){
 	<td align="center" valign="middle">
 		<?=$vals[text_label]?>
 	</td>
-	<td align="left" bgcolor="silver">
-		The iframe to the right is calling the BUTTON API CALL on load:
-		<pre><?=$url?></pre><br>
-		Direct links to API functions, results shown here in the right iframe:<br>
-		<a href="<?=$link_read?>" target="<?=$iframe_name?>">READ API</a></br>
-		<a href="<?=$link_writeon?>" target="<?=$iframe_name?>">ON API</a></br>
-		<a href="<?=$link_writeoff?>" target="<?=$iframe_name?>">OFF API</a></br>
-		<a href="<?=$url?>" target="<?=$iframe_name?>">BUTTON</a></br>
-	</td>
 	<td align="center" valign="middle">
 		<iframe
 			name="<?=$iframe_name?>"
 			frameborder="0"
-			scrolling="auto"
+			scrolling="no"
+			width="<?=($vals[w] + 10)?>"
+			height="<?=($vals[w] + 10)?>"
 			src="<?=$url?>"
-			height="120"
 		></iframe>
 	</td>
 </tr>
@@ -97,12 +89,3 @@ foreach( $button as $var => $vals){
 <?php
 
 }
-
-?>
-</table><br>
-Take a look at this array below.  You can customize this inside index.php at the top and create different buttons.<br>Try changing the values for <b>text_label</b> or <b>w</b> (width from 1 to 300)<br><br>
-
-And if you just want a basic page, check out the stripped down version of this one, <a href="/index2.php">index2.php</a><br>
-
-<pre><?php print_r($button);?></pre>
-

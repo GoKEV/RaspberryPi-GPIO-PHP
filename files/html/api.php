@@ -3,69 +3,41 @@
 error_reporting( error_reporting() & ~E_NOTICE );
 
 $input = clean_input($_REQUEST);
-//$content = "<pre>" . print_r($_REQUEST,true) . "</pre>";
-//$content .= "<pre>" . print_r($input,true) . "</pre>";
+
 //print "<pre>" . print_r($input,true) . "</pre>\n";
-
-
-
-$io = 9;
+//exit;
 
 switch ($_REQUEST['op']) {
 	case "read":
-		$result[io] =  $input[io];
+		$json = 1;
 		$result = gpio_read($input[io]);
 		$content = json_encode($result,JSON_PRETTY_PRINT);
-		break;
+	break;
 	case "write":
+		$json = 1;
 		$result = gpio_write($input[io],$input[value]);
 		$content = json_encode($result,JSON_PRETTY_PRINT);
-		break;
+	break;
 	case "switch":
+		$json = 1;
 		$result = gpio_switch($input[io]);
 		$content = json_encode($result,JSON_PRETTY_PRINT);
-		break;
+	break;
 	case "button":
-		$result = make_button($input[io],$input[value],$input[w]);
-		$html = $result[button];
+		$result = make_button();
+		$html = ($result[rewrite] == 1 ? $result[rwbutton] : $result[button]);
 		$content = json_encode($result,JSON_PRETTY_PRINT);
-		break;
-	case "buttonrewrite":
-		$rewrite = parse_rewrite($_SERVER['REQUEST_URI']);
-		$result = make_button($rewrite[1],$rewrite[2],$rewrite[3]);
-		$html = $result[button] . "$rewrite[1],$rewrite[2],$rewrite[3]";
-		$content = json_encode($result,JSON_PRETTY_PRINT);
-		break;
-	case "rewrite":
-		$rewrite = parse_rewrite($_SERVER['REQUEST_URI']);
-		switch ($rewrite[0]) {
-			case "button":
-				$result = make_button($rewrite[1],$rewrite[2],$rewrite[3]);
-				$html = $result[button];
-				$content = json_encode($result,JSON_PRETTY_PRINT);
-				break;
-			case "read":
-				$result = gpio_read($rewrite[1]);
-				$content = json_encode($result,JSON_PRETTY_PRINT);
-				break;
-			case "write":
-				$result = gpio_write($rewrite[1],$rewrite[2]);
-				$content = json_encode($result,JSON_PRETTY_PRINT);
-				break;
-		}
-//		$content = "<pre>" . print_r($rewrite,true) . "</pre>\n";
-		break;
+		$json = $result[json];
+	break;
 	default:
 		$content = "nothing to see here";
-		break;
+	break;
 }
 
-if ( (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) and ($_REQUEST['op'] != "buttonrewrite") ){
-	// we are requesting this exact page
+if ( $json == 1 ){
 	header('Content-type: text/javascript');
 	print $content;
 }else{
-	// we are requesting a different page and this is included / required
 ?>
 <head>
     <title>Raspberry Pi GPIO Remote :: GoKEV Pinterface</title>
@@ -94,24 +66,66 @@ if ( (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) and ($_REQUES
 
 
 ////////////////////////////////////////////////////////////////////////////////
-function parse_rewrite($in){
+function parse_rewrite($in,$input){
 	$mid = explode("/",$in);
 	foreach( $mid as $var => $val){
 		if ( ($val != "") and ($val != "api") ){
-			$out[intval($count)]=$val;
+			$getout[intval($count)]=$val;
 			$count = ($count + 1);
 		}
 	}
+
+
+	if ( isset($getout[0]) and isset($getout[1]) ){
+		$out[op] = $getout[0];
+		$out[io] = $getout[1];
+		$out[value] = $getout[2];
+		$out[w] = $getout[3];
+		$out[c] = $getout[4];
+		$out[rewrite] = 1;
+	}else{
+		$out[rewrite] = 0;
+	}
 	return $out;
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 function clean_input($in){
+
+	if ( (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) and ($in['op'] != "buttonrewrite") ){
+		$out[phpself] = 1;
+	}else{
+		$out[phpself] = 1;
+	}
+
+	$rwvars = explode("/",$_SERVER['REQUEST_URI']);
+	foreach( $rwvars as $rwvar => $rwval){
+		if ( ($rwval != "") and ($rwval != "api") ){
+			$rwout[intval($count)]=$rwval;
+			$count = ($count + 1);
+		}
+	}
+
 	foreach( $in as $var => $val){
 		$var = preg_replace("/[^a-zA-Z0-9]/","",$var);
 		$val = preg_replace("/[^a-zA-Z0-9]/","",$val);
 		$out[$var]=$val;
 	}
+
+	if ( (isset($rwout[0])) and (isset($rwout[1])) ){
+		$out[op] = $rwout[0];
+		$out[io] = $rwout[1];
+		$out[value] = $rwout[2];
+		$out[w] = $rwout[3];
+		$out[c] = $rwout[4];
+		$out[json] = $rwout[5];
+		$out[rewrite] = 1;
+	}else{
+		$out[rewrite] = 0;
+	}
+
 	return $out;
 }
 
@@ -177,7 +191,7 @@ function gpio_switch($io){
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function make_button($io,$value="",$w="150"){
+function make_button(){
 	global $input;
 
 	if ( isset($input[initval]) ){
@@ -186,36 +200,34 @@ function make_button($io,$value="",$w="150"){
 		print "DELAY $input[delay]";
 	}
 
-	$write_result = gpio_write($io,$value);
+	$write_result = gpio_write($input[io],$input[value]);
 
-	$result = gpio_read($io);
+	$result = gpio_read($input[io]);
 	$result[write] = $write_result;
 
-        $result[io] = $io;
-        $result[state] = gpio_getval($io);
-	$result[led] = ($result[state] == 0 ? "/red_off.png" : "/red_on.png");
-	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=button" . "&value=" . $result[nextstate] . "&w=" . $w;
-	$result[link] .= ( isset($input[delay]) ? "&delay=" . $input[delay] : "");
+	$result[phpself] = $input[phpself];
+	$result[io] = $input[io];
+        $result[state] = gpio_getval($input[io]);
+	$result[c] = $input[c];
+	$result[color] = ( isset($input[c]) ? $input[c] : "red" );
+	$result[led] = ($result[state] == 0 ? "/images/" . $result[color] . "_off.png" : "/images/" . $result[color] . "_on.png");
+	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=button" . "&value=" . $result[nextstate] . "&w=" . $input[w] . "&c=" . $result[color];
+	$result[rwlink] = "/button/" . $result[io] . "/" . $result[nextstate] . "/" . $input[w] . "/" . $result[color] . "/";
 
-	if ( isset($input[delay]) ){
-		$delayms = ($input[delay] * 1000);
+	$result[json] = $input[json];
+	$result[rewrite] = $input[rewrite];
 
-	$result[button] =<<<ALLDONE
-<script>
-function delayBack() {
-    setTimeout( function() { history.back(1); }, $delayms );
-}
-</script>
-<a href="$result[link]">
-<img src="$result[led]" width="$w" onload="javascript:delayBack()">
-</a>
-ALLDONE;
-	}else{
 	$result[button] .=<<<ALLDONE
 <a href="$result[link]">
-<img src="$result[led]" width="$w">
+<img src="$result[led]" width="$input[w]">
 </a>
 ALLDONE;
-	}
+
+	$result[rwbutton] =<<<ALLDONE
+<a href="$result[rwlink]">
+<img src="$result[led]" width="$input[w]">
+</a>
+ALLDONE;
+
 	return $result;
 }
