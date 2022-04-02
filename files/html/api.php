@@ -8,6 +8,12 @@ $input = clean_input($_REQUEST);
 //exit;
 
 switch ($_REQUEST['op']) {
+	case "api":
+		$json = 0;
+		$html = "Here's an API guide<br>";
+		$html .= "<pre>" . file_get_contents("api_doc.txt") . "</pre>\n";
+		$html .= "That was an API guide<br>";
+	break;
 	case "read":
 		$json = 1;
 		$result = gpio_read($input[io]);
@@ -27,37 +33,23 @@ switch ($_REQUEST['op']) {
 		$result = make_button();
 		$html = ($result[rewrite] == 1 ? $result[rwbutton] : $result[button]);
 		$content = json_encode($result,JSON_PRETTY_PRINT);
-		$json = $result[json];
+		$json = $input[json];
 	break;
 	default:
 		$content = "nothing to see here";
 	break;
 }
 
-if ( $json == 1 ){
+if ( $json > 0 ){
 	header('Content-type: text/javascript');
 	print $content;
 }else{
 ?>
-<head>
-    <title>Raspberry Pi GPIO Remote :: GoKEV Pinterface</title>
-    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
-    <link rel="apple-touch-icon" href="images/template/engage.png"/>
-</head>
-<meta name="viewport" content="width=device-width">
-<meta name=“viewport” content="initial-scale=1.0">
-<meta name="viewport" content="initial-scale=2.3, user-scalable=no">
-
-<body>
-<table border="0" style="font-family: Verdana, Arial, Sans; font-size: 14px">
 <?php print $html ?>
 
 <!--
 <pre><?php print_r($result); ?></pre>
 -->
-</table>
-</body>
-
 
 <?php
 }
@@ -93,13 +85,6 @@ function parse_rewrite($in,$input){
 
 ////////////////////////////////////////////////////////////////////////////////
 function clean_input($in){
-
-	if ( (basename(__FILE__) == basename($_SERVER["SCRIPT_FILENAME"])) and ($in['op'] != "buttonrewrite") ){
-		$out[phpself] = 1;
-	}else{
-		$out[phpself] = 1;
-	}
-
 	$rwvars = explode("/",$_SERVER['REQUEST_URI']);
 	foreach( $rwvars as $rwvar => $rwval){
 		if ( ($rwval != "") and ($rwval != "api") ){
@@ -117,7 +102,7 @@ function clean_input($in){
 	if ( (isset($rwout[0])) and (isset($rwout[1])) ){
 		$out[op] = $rwout[0];
 		$out[io] = $rwout[1];
-		$out[value] = $rwout[2];
+		$out[value] = ( preg_match("/[0-1]/",$rwout[2] ) ? $rwout[2] : "" );
 		$out[w] = $rwout[3];
 		$out[c] = $rwout[4];
 		$out[json] = $rwout[5];
@@ -157,10 +142,10 @@ ALLDONE;
 
 ////////////////////////////////////////////////////////////////////////////////
 function gpio_read($io){
+	$result[changed] = false;
 	$result[io] = $io;
 	$result[state] = gpio_getval($io);
 	$result[nextstate] = ($result[state] == 1 ? 0 : 1);
-	$result[changed] = false;
 	return $result;
 }
 
@@ -173,6 +158,7 @@ function gpio_write($io,$newstate){
 	$result[changed] = ($statea == $stateb ? false : true);
 	$result[io] = $io;
 	$result[state] = gpio_getval($io);
+	$result[nextstate] = ($result[state] == 1 ? 0 : 1);
 	return $result;
 }
 
@@ -193,29 +179,41 @@ function gpio_switch($io){
 ////////////////////////////////////////////////////////////////////////////////
 function make_button(){
 	global $input;
+	$messages[function_name] = "make_button";
 
-	if ( isset($input[initval]) ){
-		$value = $input[initval];
-	}else if ( isset($input[delay]) ){
-		print "DELAY $input[delay]";
-	}
-
-	$write_result = gpio_write($input[io],$input[value]);
-
+	$write_result  = gpio_write($input[io],$input[value]);
 	$result = gpio_read($input[io]);
-	$result[write] = $write_result;
 
-	$result[phpself] = $input[phpself];
+	$result[changed] = $write_result[changed];
+	$result[nextstate] = $write_result[nextstate];
+
 	$result[io] = $input[io];
         $result[state] = gpio_getval($input[io]);
 	$result[c] = $input[c];
-	$result[color] = ( isset($input[c]) ? $input[c] : "red" );
-	$result[led] = ($result[state] == 0 ? "/images/" . $result[color] . "_off.png" : "/images/" . $result[color] . "_on.png");
-	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=button" . "&value=" . $result[nextstate] . "&w=" . $input[w] . "&c=" . $result[color];
-	$result[rwlink] = "/button/" . $result[io] . "/" . $result[nextstate] . "/" . $input[w] . "/" . $result[color] . "/";
 
-	$result[json] = $input[json];
+	$led_on = "/images/" . $result[c] . "_on.png";
+	$led_off = "/images/" . $result[c] . "_off.png";
+
+	$led_on_file = $_SERVER['DOCUMENT_ROOT'] . $led_on;
+	$led_off_file = $_SERVER['DOCUMENT_ROOT'] . $led_off;
+
+
+	if ( (! file_exists($led_on_file)) or (! file_exists($led_off_file))){
+		$messages[defaultcolor] = "green";
+		$messages[color_error] = "$messages[defaultcolor] was chosen because files were not found for $led_on_file or $led_off_file";
+		$result[c] = $messages[defaultcolor];
+		$led_on = "/images/" . $result[c] . "_on.png";
+		$led_off = "/images/" . $result[c] . "_off.png";
+	}
+
+
+
+	$result[led] = ($result[state] == 0 ? $led_off : $led_on);
+	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=button" . "&value=" . $result[nextstate] . "&w=" . $input[w] . "&c=" . $result[c];
+	$result[rwlink] = "/button/" . $result[io] . "/" . $result[nextstate] . "/" . $input[w] . "/" . $result[c] . "/";
+
 	$result[rewrite] = $input[rewrite];
+	if ($input[value] != ""){ $result[value] = $input[value];}
 
 	$result[button] .=<<<ALLDONE
 <a href="$result[link]">
@@ -228,6 +226,31 @@ ALLDONE;
 <img src="$result[led]" width="$input[w]">
 </a>
 ALLDONE;
+
+	if ($input[json] > 2){
+		$result[request_uri] = $_SERVER['REQUEST_URI'];
+		$result[path_info] = $_SERVER['PATH_INFO'];
+		$result[query_string] = $_SERVER['QUERY_STRING'];
+		$result[input] = $input;
+		$result[write_result] = $write_result;
+		$result[base_url] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+		$result[full_link] = $result[base_url] . $result[link];
+		$result[full_rwlink] = $result[base_url] . $result[rwlink];
+		$result[full_button] .=<<<ALLDONE
+<a href="$result[full_link]">
+<img src="$result[led]" width="$input[w]">
+</a>
+ALLDONE;
+
+		$result[full_rwbutton] =<<<ALLDONE
+<a href="$result[full_rwlink]">
+<img src="$result[led]" width="$input[w]">
+</a>
+ALLDONE;
+	}
+	if ($input[json] > 1){
+		$result[messages] = $messages;
+	}
 
 	return $result;
 }

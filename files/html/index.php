@@ -53,21 +53,37 @@ $button[3] = array(
 /////////////////////////////////////////////////////////////////////
 
 ?>
-<table border="1" valign="top" cellpadding="10">
+<head>
+    <title>Raspberry Pi GPIO Remote :: GoKEV Pinterface</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+    <link rel="apple-touch-icon" href="images/template/engage.png"/>
+</head>
+<meta name="viewport" content="width=device-width">
+<meta name=“viewport” content="initial-scale=1.0">
+<meta name="viewport" content="initial-scale=2.3, user-scalable=no">
+
+<body>
+<table border="0" style="font-family: Verdana, Arial, Sans; font-size: 14px">
+
 <?php
 
 foreach( $button as $var => $vals){
-	$url = "/api.php?";
+	$link_button = "/api.php?";
 	foreach( $vals as $valvar => $valval){
 		// the following adds all fields to the URL string EXCEPT
 		// those with an underscore (like text_label)
-		$url .= ( preg_match("/_/",$valvar) ? "" : "&" . $valvar . "=" . $valval);
-		$iframe_name = "iframe_" . $vals[io];
-		$link_read = "/api.php?op=read&io=$vals[io]";
-		$link_writeon = "/api.php?op=write&io=$vals[io]&value=1";
-		$link_writeoff = "/api.php?op=write&io=$vals[io]&value=0";
-
+		$link_button .= ( preg_match("/_/",$valvar) ? "" : "&" . $valvar . "=" . $valval);
 	}
+
+	$iframe_name = "iframe_" . $vals[io];
+	$link_read = "/api.php?op=read&io=$vals[io]";
+	$link_writeon = "/api.php?op=write&io=$vals[io]&value=1";
+	$link_writeoff = "/api.php?op=write&io=$vals[io]&value=0";
+	$link_button = "/api.php?op=button&io=$vals[io]&w=$vals[w]&c=$vals[c]";
+	$slink_button = "/button/$vals[io]/_/$vals[w]/$vals[c]/";
+	$slink_writeon = "/button/$vals[io]/1/$vals[w]/$vals[c]/";
+	$slink_writeoff = "/button/$vals[io]/0/$vals[w]/$vals[c]/";
+
 ?>
 <tr>
 	<td align="center" valign="middle">
@@ -75,19 +91,19 @@ foreach( $button as $var => $vals){
 	</td>
 	<td align="left" bgcolor="silver">
 		The iframe to the right is calling the BUTTON API CALL on load:
-		<pre><?=$url?></pre><br>
+		<pre><b><?=$link_button?></b> or short link: <b><?=$slink_button?></b></pre><br>
 		Direct links to API functions, results shown here in the right iframe:<br>
 		<a href="<?=$link_read?>" target="<?=$iframe_name?>">READ API</a></br>
 		<a href="<?=$link_writeon?>" target="<?=$iframe_name?>">ON API</a></br>
 		<a href="<?=$link_writeoff?>" target="<?=$iframe_name?>">OFF API</a></br>
-		<a href="<?=$url?>" target="<?=$iframe_name?>">BUTTON</a></br>
+		<a href="<?=$link_button?>" target="<?=$iframe_name?>">BUTTON</a></br>
 	</td>
 	<td align="center" valign="middle">
 		<iframe
 			name="<?=$iframe_name?>"
 			frameborder="0"
 			scrolling="auto"
-			src="<?=$url?>"
+			src="<?=$link_button?>"
 			height="120"
 		></iframe>
 	</td>
@@ -99,7 +115,9 @@ foreach( $button as $var => $vals){
 }
 
 ?>
-</table><br>
+</table>
+</body>
+<br>
 Take a look at this array below.  You can customize this inside index.php at the top and create different buttons.<br>Try changing the values for <b>text_label</b> or <b>w</b> (width from 1 to 300)<br><br>
 
 And if you just want a basic page, check out the stripped down version of this one, <a href="/index2.php">index2.php</a><br>

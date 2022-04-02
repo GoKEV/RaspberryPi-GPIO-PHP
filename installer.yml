@@ -1,15 +1,14 @@
 ---
 - name: Deploy the Raspberry Pi PHP GPIO interface to a Pi
   hosts: mypi
+  gather_facts: no
   become: yes
 
   tasks:
   - name: Install a list of packages
     apt:
       name: "{{ packages }}"
-      dpkg_options: 'force-confold,force-confdef,dist-upgrade'
       install_recommends: yes
-      force: yes
     vars:
       packages:
       - apache2
@@ -21,6 +20,8 @@
       dest: /var/www/html/
       recursive: yes
     become: true
+    tags:
+      - html
 
   - name: Sync the WiringPi directory
     synchronize:
@@ -40,11 +41,18 @@
       dest: /var/www/html/index.html
       state: absent
 
-  - name: Fix the apache2 conf to servce up index.php as the main page
-    lineinfile:
-      path: /etc/apache2/apache2.conf
-      insertafter: '^<Directory /var/www/>'
-      line: '        DirectoryIndex index.php'
+  - ansible.builtin.copy:
+      src: files/apache2.conf
+      dest: /etc/apache2/apache2.conf
+      owner: root
+      group: root
+      mode: '0644'
+      backup: yes
+
+  - name: Enable mod_rewrite into apache2
+    shell:
+      cmd: a2enmod rewrite
+    become: true
 
   - name: Enable apache2 service and make sure it is started
     service:

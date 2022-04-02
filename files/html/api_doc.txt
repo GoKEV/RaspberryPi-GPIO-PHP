@@ -1,0 +1,51 @@
+API doc	
+
+
+There are currentlty 4 basic functions:  Read, write, switch, and button.  The read, write, and switch functions simply perform the function and output a reply in JSON.
+
+READ FUNCTION
+	INPUT parameters:
+	io		the GPIO address to use (generally 0-3)
+
+	OUTPUT reply parameters:
+	changed		boolean, always "false"/0 for "read")
+	io		confirms the IO from the input
+	state		boolean, 1 for "on" and 0 for "off"
+	nextstate	boolean, should be the opposite of the current state.
+
+	EXAMPLES:
+
+WRITE FUNCTION
+	INPUT parameters:
+	io		the GPIO address to use (generally 0-3)
+	value		the new value to write (blank, "_", or omit for equivelant to "read")
+
+	OUTPUT reply parameters:
+	changed		boolean, indicates if this function caused a change or if the previous state remained 
+	io		confirms the IO from the input
+	state		boolean, 1 for "on" and 0 for "off"
+	nextstate	boolean, should be the opposite of the current state.
+
+	EXAMPLES:
+	/api.php?io=3&op=write&value=0	(turn off GPIO 3)
+	/api.php?io=0&op=write&value=1	(turn on GPIO 0)
+
+
+SWITCH FUNCTION
+	INPUT parameters:
+	io		the GPIO address to use (generally 0-3)
+
+	OUTPUT reply parameters:
+	changed		boolean, should always show "true" / 1 for "switch"
+	io		confirms the IO from the input
+	state		boolean, 1 for "on" and 0 for "off"
+	nextstate	boolean, should be the opposite of the current state.
+
+	EXAMPLES:
+	/api.php?io=2&op=switch	(refreshing this over and over should continually switch the state of GPIO 2 every time)
+
+BUTTON FUNCTION
+	INPUT parameters:
+	OUTPUT reply parameters:
+	EXAMPLES:
+
