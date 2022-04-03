@@ -76,13 +76,16 @@ foreach( $button as $var => $vals){
 	}
 
 	$iframe_name = "iframe_" . $vals[io];
+
 	$link_read = "/api.php?op=read&io=$vals[io]";
+	$link_button = "/api.php?op=button&io=$vals[io]&w=$vals[w]&c=$vals[c]";
 	$link_writeon = "/api.php?op=write&io=$vals[io]&value=1";
 	$link_writeoff = "/api.php?op=write&io=$vals[io]&value=0";
-	$link_button = "/api.php?op=button&io=$vals[io]&w=$vals[w]&c=$vals[c]";
+
+	$slink_read = "/read/$vals[io]/";
 	$slink_button = "/button/$vals[io]/_/$vals[w]/$vals[c]/";
-	$slink_writeon = "/button/$vals[io]/1/$vals[w]/$vals[c]/";
-	$slink_writeoff = "/button/$vals[io]/0/$vals[w]/$vals[c]/";
+	$slink_writeon = "/write/$vals[io]/1/";
+	$slink_writeoff = "/write/$vals[io]/0/";
 
 ?>
 <tr>
@@ -91,12 +94,19 @@ foreach( $button as $var => $vals){
 	</td>
 	<td align="left" bgcolor="silver">
 		The iframe to the right is calling the BUTTON API CALL on load:
-		<pre><b><?=$link_button?></b> or short link: <b><?=$slink_button?></b></pre><br>
+		<pre><b><?=$link_button?></b> or short URL version: <b><?=$slink_button?></b></pre><br>
 		Direct links to API functions, results shown here in the right iframe:<br>
-		<a href="<?=$link_read?>" target="<?=$iframe_name?>">READ API</a></br>
-		<a href="<?=$link_writeon?>" target="<?=$iframe_name?>">ON API</a></br>
-		<a href="<?=$link_writeoff?>" target="<?=$iframe_name?>">OFF API</a></br>
-		<a href="<?=$link_button?>" target="<?=$iframe_name?>">BUTTON</a></br>
+		<a href="<?=$link_read?>" target="<?=$iframe_name?>">READ API</a> or 
+		<a href="<?=$slink_read?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
+
+		<a href="<?=$link_writeon?>" target="<?=$iframe_name?>">ON API</a> or 
+		<a href="<?=$slink_writeon?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
+
+		<a href="<?=$link_writeoff?>" target="<?=$iframe_name?>">OFF API</a> or 
+		<a href="<?=$slink_writeoff?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
+
+		<a href="<?=$link_button?>" target="<?=$iframe_name?>">BUTTON</a> or 
+		<a href="<?=$slink_button?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
 	</td>
 	<td align="center" valign="middle">
 		<iframe
