@@ -28,6 +28,8 @@ ansible-playbook -i mypi.hosts installer.yml
 
   - On one deployment, APT seemed to hang due to dependencies.  Adding the force option seemed to help
 
+  - it turns out that "force" has been deprecated in the ansible apt module. I also found that on a Pi Zero, it chokes at the apt install area when done via ansible. My fix was to do system updates on the command line, install apache2 and php packages, then run the playbook again. It worked fine after that. 
+
 ## Notes
 
   - This reads the state of GPIO0 through GPIO7, as well as writes to them when the button is clicked.
