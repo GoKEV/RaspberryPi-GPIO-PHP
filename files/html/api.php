@@ -10,9 +10,7 @@ $input = clean_input($_REQUEST);
 switch ($_REQUEST['op']) {
 	case "api":
 		$json = 0;
-		$html = "Here's an API guide<br>";
-		$html .= "<pre>" . file_get_contents("api_doc.txt") . "</pre>\n";
-		$html .= "That was an API guide<br>";
+		$html = "<pre>" . file_get_contents("api_doc.txt") . "</pre>\n";
 	break;
 	case "read":
 		$json = 1;

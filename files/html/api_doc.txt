@@ -46,6 +46,26 @@ SWITCH FUNCTION
 
 BUTTON FUNCTION
 	INPUT parameters:
+	io		the GPIO address to use (generally 0-3)
+	value		the new value to write (blank, "_", or omit for equivelant to "read")
+	c		color of the button (red, yellow, green, blue included).  Also included:  a Gimp template if you want to make your own colors in the same style.
+	w		width / height of the button in pixels.  I use 50 to 150.  The graphic is 300px
+	json		passing this value from 1 to 3 will output JSON only, instead of a button.  3 spits out verbose output that will empower you to use the function for the HTML of the button in your own app.
+
 	OUTPUT reply parameters:
-	EXAMPLES:
+	changed		boolean, should always show "true" / 1 for "switch"
+	io		confirms the IO from the input
+	state		boolean, 1 for "on" and 0 for "off"
+	nextstate	boolean, should be the opposite of the current state.
+
+	EXAMPLES:  (each parameterized request is paired with a comparable rewrite URL)
+	/api.php?io=2&op=button&c=red&w=120  (does not make a change on load; generates a button that loads with the current state)
+	/button/2/_/120/green/
+
+	/api.php?io=2&op=button&c=red&w=120&json=3  (same as above but only outputs JSON, not a graphic button.  Verbose JSON includes the HTML that would be used to build a button)
+	/button/2/_/120/green/3
+
+	/api.php?io=2&op=button&value=1&c=red&w=120  (turns the button on and generates a lit "on" button)
+	/button/2/1/120/green/
+
 
