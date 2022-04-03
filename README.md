@@ -39,10 +39,10 @@ ansible-playbook -i mypi.hosts installer.yml
 
 <img src="https://github.com/GoKEV/RaspberryPi-GPIO-PHP/blob/master/files/html/images/GPIO-indexpage.png?raw=true" width="150"><br>
   
-  - Buttons can be created in different color and size
+  - Buttons can be created in different color and size.  Clicking the button changes the light status to show the current state.
   
-<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png">
-<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png"><br>
+<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png" width="100">
+<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_on.png" width="100"><br>
 
   - the same status can be validated from the command line as so:
 ```
