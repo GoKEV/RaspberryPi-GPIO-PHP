@@ -128,6 +128,34 @@ foreach( $button as $var => $vals){
 </table>
 </body>
 <br>
+
+<h1>Wiring Diagram</h1>
+<pre>
+Look at this image below and note the GPIO for WiringPi is different than the BCM.  Here's how I wire mine (and it works):
+
+PIN	FUNCTION
+11	GPIO 0 out to relay 1
+12	GPIO 1 out to relay 2
+13	GPIO 2 out to relay 3
+15	GPIO 3 out to relay 4
+
+Relay block generally wants 5v power (pin 2) and ground (pin 6).
+
+Additional relays can be set up for GPIO 4-7.  I have tested this with 8 relays on GPIO 0 through 7.
+
+I have tested this since 2015 with <a href="https://www.amazon.com/gp/product/B00E0NSORY/" target="new_">This 4-port relay on Amazon</a> 
+and I recently purchased <a href="https://www.amazon.com/gp/product/B0057OC66U/" target="new_">this 16-port relay</a> because, why not?
+I also grabbed this <a href="https://www.amazon.com/gp/product/B07SFCM4DD/" target="new_">This 2 pack of solid state relays</a> in case
+a magnetic relay gives issues when latched for longer periods
+of time... though I've seen no evidence from days and weeks of
+leaving certain GPIOs on.
+
+</pre>
+
+
+
+<img src="/images/RaspberryPiPinout.png"><br>
+
 Take a look at this array below.  You can customize this inside index.php at the top and create different buttons.<br>Try changing the values for <b>text_label</b> or <b>w</b> (width from 1 to 300)<br><br>
 
 And if you just want a basic page, check out the stripped down version of this one, <a href="/index2.php">index2.php</a><br>
