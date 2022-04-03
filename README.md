@@ -28,6 +28,8 @@ ansible-playbook -i mypi.hosts installer.yml
 
   - On one deployment, APT seemed to hang due to dependencies.  Adding the force option seemed to help
 
+  - it turns out that "force" has been deprecated in the ansible apt module. I also found that on a Pi Zero, it chokes at the apt install area when done via ansible. My fix was to do system updates on the command line, install apache2 and php packages, then run the playbook again. It worked fine after that. 
+
 ## Notes
 
   - This reads the state of GPIO0 through GPIO7, as well as writes to them when the button is clicked.
@@ -38,6 +40,11 @@ ansible-playbook -i mypi.hosts installer.yml
   - this is what the web interface looks like when you access the page (locally or remotely)
 
 <img src="https://github.com/GoKEV/RaspberryPi-GPIO-PHP/blob/master/files/html/images/GPIO-indexpage.png?raw=true" width="150"><br>
+  
+  - Buttons can be created in different color and size.  Clicking the button changes the light status to show the current state.
+  
+<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png" width="100">
+<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_on.png" width="100"><br>
 
   - the same status can be validated from the command line as so:
 ```
