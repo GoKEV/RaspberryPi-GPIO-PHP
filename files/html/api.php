@@ -8,10 +8,6 @@ $input = clean_input($_REQUEST);
 //exit;
 
 switch ($_REQUEST['op']) {
-	case "api":
-		$json = 0;
-		$html = "<pre>" . file_get_contents("api_doc.txt") . "</pre>\n";
-	break;
 	case "read":
 		$json = 1;
 		$result = gpio_read($input[io]);
@@ -33,8 +29,17 @@ switch ($_REQUEST['op']) {
 		$content = json_encode($result,JSON_PRETTY_PRINT);
 		$json = $input[json];
 	break;
+	case "momentary":
+		$input[referer] = $_SERVER['HTTP_REFERER'];
+		$result = make_button();
+		$html = $result[refresh];
+		$html .= ($result[rewrite] == 1 ? $result[rwbutton] : $result[button]);
+		$content = json_encode($result,JSON_PRETTY_PRINT);
+		$json = $input[json];
+	break;
 	default:
-		$content = "nothing to see here";
+		$json = 0;
+		$html = "<pre>" . file_get_contents("api_doc.txt") . "</pre>\n";
 	break;
 }
 
@@ -43,7 +48,11 @@ if ( $json > 0 ){
 	print $content;
 }else{
 ?>
-<?php print $html ?>
+<?php 
+
+print $html;
+
+?>
 
 <!--
 <pre><?php print_r($result); ?></pre>
@@ -204,11 +213,16 @@ function make_button(){
 		$led_off = "/images/" . $result[c] . "_off.png";
 	}
 
-
+	if ( ($input[d] > 0) and (! isset($input[referer])) ) {
+		$op = "momentary";
+	}else{
+		$op = "button";
+	}
 
 	$result[led] = ($result[state] == 0 ? $led_off : $led_on);
-	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=button" . "&value=" . $result[nextstate] . "&w=" . $input[w] . "&c=" . $result[c];
-	$result[rwlink] = "/button/" . $result[io] . "/" . $result[nextstate] . "/" . $input[w] . "/" . $result[c] . "/";
+	$result[link] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=" . $op . "&value=" . $result[nextstate] . "&w=" . $input[w] . "&c=" . $result[c] . "&d=" . $input[d];
+	$result[rwlink] = "/$op/" . $result[io] . "/" . $result[nextstate] . "/" . $input[w] . "/" . $result[c] . "/";
+	$result[nextlink] = $_SERVER['SCRIPT_NAME'] . "?io=" . $result[io] . "&op=" . $op . "&value=" . $result[state] . "&w=" . $input[w] . "&c=" . $result[c];
 
 	$result[rewrite] = $input[rewrite];
 	if ($input[value] != ""){ $result[value] = $input[value];}
@@ -250,5 +264,13 @@ ALLDONE;
 		$result[messages] = $messages;
 	}
 
+	$result[refresh] =<<<ALLDONE
+<meta http-equiv="refresh" content="$input[d];URL='$input[referer]'" />
+
+ALLDONE;
+
 	return $result;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
