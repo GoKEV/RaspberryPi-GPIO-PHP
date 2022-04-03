@@ -38,6 +38,11 @@ ansible-playbook -i mypi.hosts installer.yml
   - this is what the web interface looks like when you access the page (locally or remotely)
 
 <img src="https://github.com/GoKEV/RaspberryPi-GPIO-PHP/blob/master/files/html/images/GPIO-indexpage.png?raw=true" width="150"><br>
+  
+  - Buttons can be created in different color and size
+  
+<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png">
+<img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png"><br>
 
   - the same status can be validated from the command line as so:
 ```
