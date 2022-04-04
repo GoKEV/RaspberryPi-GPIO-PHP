@@ -49,6 +49,7 @@ BUTTON FUNCTION
 	io		the GPIO address to use (generally 0-3)
 	value		the new value to write (blank, "_", or omit for equivelant to "read")
 	c		color of the button (red, yellow, green, blue included).  Also included:  a Gimp template if you want to make your own colors in the same style.
+	d		delay (in seconds) until the button reverts back to this state. The "value" field is required for this to work correctly.
 	w		width / height of the button in pixels.  I use 50 to 150.  The graphic is 300px
 	json		passing this value from 1 to 3 will output JSON only, instead of a button.  3 spits out verbose output that will empower you to use the function for the HTML of the button in your own app.
 
@@ -68,4 +69,5 @@ BUTTON FUNCTION
 	/api.php?io=2&op=button&value=1&c=red&w=120  (turns the button on and generates a lit "on" button)
 	/button/2/1/120/green/
 
+	/api.php?io=3&op=button&c=blue&w=100&value=0&d=5  (This creates a blue button with default value "off".  Pushing the button will activate GPIO 3 for 5 seconds, then back to the original state of "off"
 

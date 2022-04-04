@@ -51,6 +51,7 @@ $button[3] = array(
 
 );
 
+
 /////////////////////////////////////////////////////////////////////
 ////  Editing anything below this will change the page funtion.
 /////////////////////////////////////////////////////////////////////
@@ -81,9 +82,7 @@ foreach( $button as $var => $vals){
 	$iframe_name = "iframe_" . $vals[io];
 
 	$link_read = "/api.php?op=read&io=$vals[io]";
-	$link_button = "/api.php?op=button&io=$vals[io]&w=$vals[w]&c=$vals[c]";
-	$link_button .= ( isset($vals[d]) ? "&value=$vals[v]&d=$vals[d]" : "");
-
+	$link_button = "/api.php?op=button&io=$vals[io]&value=$vals[v]&d=$vals[d]&w=$vals[w]&c=$vals[c]";
 	$link_writeon = "/api.php?op=write&io=$vals[io]&value=1";
 	$link_writeoff = "/api.php?op=write&io=$vals[io]&value=0";
 
@@ -92,14 +91,6 @@ foreach( $button as $var => $vals){
 	$slink_writeon = "/write/$vals[io]/1/";
 	$slink_writeoff = "/write/$vals[io]/0/";
 
-	if ($vals[d] >= 1){
-		$slink_button_block = " -- Short link not supported with a delay (yet)";
-	}else{
-		$slink_button_block =<<<ALLDONE
-or <a href="$slink_button" target="$iframe_name">(same, but short URL)</a></br>
-ALLDONE;
-	}
-
 ?>
 <tr>
 	<td align="center" valign="middle">
@@ -107,7 +98,7 @@ ALLDONE;
 	</td>
 	<td align="left" bgcolor="silver">
 		The iframe to the right is calling the BUTTON API CALL on load:
-		<pre><b><?=$link_button?></b><br>or short URL version: <b><?=$slink_button?></b></pre><br>
+		<pre><b><?=$link_button?></b> or short URL version: <b><?=$slink_button?></b></pre><br>
 		Direct links to API functions, results shown here in the right iframe:<br>
 		<a href="<?=$link_read?>" target="<?=$iframe_name?>">READ API</a> or 
 		<a href="<?=$slink_read?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
@@ -118,8 +109,9 @@ ALLDONE;
 		<a href="<?=$link_writeoff?>" target="<?=$iframe_name?>">OFF API</a> or 
 		<a href="<?=$slink_writeoff?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
 
-		<a href="<?=$link_button?>" target="<?=$iframe_name?>">BUTTON</a>
-		<?=$slink_button_block?>
+		<a href="<?=$link_button?>" target="<?=$iframe_name?>">BUTTON</a> or 
+		<a href="<?=$slink_button?>" target="<?=$iframe_name?>">(same, but short URL)</a></br>
+
 	</td>
 	<td align="center" valign="middle">
 		<iframe

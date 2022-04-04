@@ -46,6 +46,9 @@ ansible-playbook -i mypi.hosts installer.yml
 <img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_off.png" width="100">
 <img src="https://raw.githubusercontent.com/GoKEV/RaspberryPi-GPIO-PHP/master/files/buttons_on.png" width="100"><br>
 
+  - Full instructions for the API functions and button creation are available <a href="https://github.com/GoKEV/RaspberryPi-GPIO-PHP/blob/master/files/html/api_doc.txt" target="new_">HERE</a>
+
+
   - the same status can be validated from the command line as so:
 ```
 pi@raspberrypi:~ $ gpio read 0
@@ -111,6 +114,8 @@ After reading Gordon's self-proclaimed rant http://wiringpi.com/wiringpi-depreca
 
 This project was created in 2016 by [Kevin Holmes](http://GoKEV.com/), based on the desire for a simple GPIO interface pane.  It has evolved slightly to adapt for platform changes, but is still the same basic interface it started out to be.
 
+- 2022-04-03  Function of momentary buttons is purrty.  It uses a meta-refresh to revert back to the referer page (click the button, reverts back in XX seconds).
+- 2022-04-01  Thorough API documentation added <a href="https://github.com/GoKEV/RaspberryPi-GPIO-PHP/blob/master/files/html/api_doc.txt" target="new_">here</a>.
 - 2022-03-17  I added the functionality for momentary buttons.  They can be configured in the index.php as latching or momentary with a user-defined delay in seconds.  The blue LED doesn't change from the default value.  I'll fix that some day.
 - 2022-03-16  Read above, "WiringPi deprecation - don't email Gordon to support this."
 - 2019-03-29  Ansible playbook installer allows complete automated setup with a new Pi
