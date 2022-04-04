@@ -1,0 +1,3 @@
+Cmnd_Alias GPIOCOMMAND=/usr/bin/raspi-gpio
+ALL ALL=NOPASSWD: GPIOCOMMAND
+

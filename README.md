@@ -60,9 +60,16 @@ pi@raspberrypi:~ $ gpio read 2
 pi@raspberrypi:~ $ 
 ```
 
-## GPIO from DWAB
+## GPIO for WiringPi
 
-  - this includes a screen shot of some of the GPIO pinouts explained
+  - I originally used the WiringPi library because the IO commands didn't require sudo.
+
+  - However, This project now works with either wiring set.  Simply modify the variable in the top few lines of `api.php`  $gpformat = "wiringpi"; or $gpformat = "broadcom";.  This change will modify the commands used to read / write IO, as well as switch between IO names.
+
+  - For instance, WiringPi GPIO 0 is the same wire as Broadcom GPIO 17.  You can read the state of GPIO 0, then change the API for BCM pinout -- and run the query again on io=17 for the same answer.
+
+
+this includes a screen shot of some of the GPIO pinouts explained
 
 ![RaspberryPiPinout.png](files/RaspberryPiPinout.png?raw=true "RaspberryPiPinout.png")
 

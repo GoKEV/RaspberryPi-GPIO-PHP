@@ -19,6 +19,7 @@
       src: files/html/
       dest: /var/www/html/
       recursive: yes
+      delete: yes
     become: true
     tags:
       - html
@@ -41,13 +42,22 @@
       dest: /var/www/html/index.html
       state: absent
 
-  - ansible.builtin.copy:
+  - name: apache2 config file
+    copy:
       src: files/apache2.conf
       dest: /etc/apache2/apache2.conf
       owner: root
       group: root
       mode: '0644'
       backup: yes
+
+  - name: sudoers file for the raspi-gpio command
+    copy:
+      src: files/raspi-gpio-sudoers
+      dest: /etc/sudoers.d/raspi-gpio
+      owner: root
+      group: root
+      mode: '0644'
 
   - name: Enable mod_rewrite into apache2
     shell:

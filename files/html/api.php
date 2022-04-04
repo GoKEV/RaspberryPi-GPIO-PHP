@@ -2,6 +2,9 @@
 
 error_reporting( error_reporting() & ~E_NOTICE );
 
+$gpformat = "wiringpi";
+//$gpformat = "broadcom";
+
 $input = clean_input($_REQUEST);
 
 //print "<pre>" . print_r($input,true) . "</pre>\n";
@@ -123,28 +126,42 @@ function clean_input($in){
 
 ////////////////////////////////////////////////////////////////////////////////
 function gpio_init($io){
-	$command =<<<ALLDONE
-         gpio mode $io out
-ALLDONE;
-	return preg_replace("/\s+/","",shell_exec($command));
+	global $gpformat;
+	if ($gpformat == "wiringpi"){
+		$command = "gpio mode $io out";
+		return preg_replace("/\s+/","",shell_exec($command));
+	}else{
+		$command = "sudo raspi-gpio set $io op";
+		return chop(preg_replace("/\s+/","",shell_exec($command)));
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 function gpio_getval($io){
+	global $gpformat;
 	gpio_init($io);
-	$command =<<<ALLDONE
-         gpio read $io
-ALLDONE;
-	return preg_replace("/\s+/","",shell_exec($command));
+	if ($gpformat == "wiringpi"){
+		$command = "gpio read $io";
+		return preg_replace("/\s+/","",shell_exec($command));
+	}else{
+		$command = "sudo raspi-gpio get $io";
+		return chop(preg_replace("/^.*level=([0-9])\s+.*$/","$1",shell_exec($command)));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 function gpio_setval($io,$value){
+	global $gpformat;
 	gpio_init($io);
-	$command =<<<ALLDONE
-         gpio write $io $value
-ALLDONE;
-	return preg_replace("/\s+/","",shell_exec($command));
+	if ($gpformat == "wiringpi"){
+		$command = "gpio write $io $value";
+		return preg_replace("/\s+/","",shell_exec($command));
+	}else{
+		$val = ($value == 1 ? "dh" : "dl");
+		$command = "sudo raspi-gpio set $io op $val";
+		return chop(preg_replace("/\s+/","",shell_exec($command)));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

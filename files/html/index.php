@@ -144,7 +144,7 @@ ALLDONE;
 
 <h1>Wiring Diagram</h1>
 <pre>
-Look at this image below and note the GPIO for WiringPi is different than the BCM.  Here's how I wire mine (and it works):
+Look at this image below and note the GPIO for WiringPi is different than the BCM.  Here's how I wire mine with WiringPi (and it works):
 
 PIN	FUNCTION
 11	GPIO 0 out to relay 1
@@ -163,6 +163,9 @@ a magnetic relay gives issues when latched for longer periods
 of time... though I've seen no evidence from days and weeks of
 leaving certain GPIOs on.
 
+
+If you decide to use the BCM pinout, you can change the variable on the first few lines of api.php from WiringPi to Broadcom pins.  This will change the commands and pinout to native BCM instead of WiringPi.
+Originally, I used WiringPi because native raspi-gpio commands require sudo.  I set an explicit sudo rule for the raspi-gpio command and built it to work either way.
 </pre>
 
 
