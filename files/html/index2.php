@@ -13,7 +13,7 @@
 /////////////////////////////////////////////////////////////////////
 
 $button[0] = array(
-	"text_label"=>"This is IO 0",
+	"text_label"=>"This is IO 0.  Click on, click off.",
 	"io"=>"0",
 	"op"=>"button",
 	"w"=>"100",
@@ -21,7 +21,7 @@ $button[0] = array(
 );
 
 $button[1] = array(
-	"text_label"=>"This is IO 1",
+	"text_label"=>"This is IO 1.  Click on, click off.",
 	"io"=>"1",
 	"op"=>"button",
 	"w"=>"100",
@@ -30,20 +30,24 @@ $button[1] = array(
 );
 
 $button[2] = array(
-	"text_label"=>"This is IO 2",
+	"text_label"=>"This is IO 2 (1 second momentary, default on)",
 	"io"=>"2",
 	"op"=>"button",
 	"w"=>"100",
-	"c"=>"green"
+	"c"=>"green",
+	"v"=>"1",
+	"d"=>"1"
 
 );
 
 $button[3] = array(
-	"text_label"=>"This is IO 3",
+	"text_label"=>"This is IO 3 (3 second momentary, default off)",
 	"io"=>"3",
 	"op"=>"button",
 	"w"=>"100",
-	"c"=>"blue"
+	"c"=>"blue",
+	"v"=>"0",
+	"d"=>"3"
 
 );
 
@@ -57,17 +61,8 @@ $button[3] = array(
 <?php
 
 foreach( $button as $var => $vals){
-	$url = "/api.php?";
-	foreach( $vals as $valvar => $valval){
-		// the following adds all fields to the URL string EXCEPT
-		// those with an underscore (like text_label)
-		$url .= ( preg_match("/_/",$valvar) ? "" : "&" . $valvar . "=" . $valval);
-		$iframe_name = "iframe_" . $vals[io];
-		$link_read = "/api.php?op=read&io=$vals[io]";
-		$link_writeon = "/api.php?op=write&io=$vals[io]&value=1";
-		$link_writeoff = "/api.php?op=write&io=$vals[io]&value=0";
-
-	}
+	$link_button = "/api.php?op=button&io=$vals[io]&w=$vals[w]&c=$vals[c]";
+	$link_button .= ( isset($vals[d]) ? "&value=$vals[v]&d=$vals[d]" : "");
 ?>
 <tr>
 	<td align="center" valign="middle">
@@ -80,7 +75,7 @@ foreach( $button as $var => $vals){
 			scrolling="no"
 			width="<?=($vals[w] + 10)?>"
 			height="<?=($vals[w] + 10)?>"
-			src="<?=$url?>"
+			src="<?=$link_button?>"
 		></iframe>
 	</td>
 </tr>

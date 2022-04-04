@@ -13,7 +13,7 @@
 /////////////////////////////////////////////////////////////////////
 
 $button[0] = array(
-	"text_label"=>"This is IO 0",
+	"text_label"=>"This is IO 0.  Click on, click off.",
 	"io"=>"0",
 	"op"=>"button",
 	"w"=>"100",
@@ -21,7 +21,7 @@ $button[0] = array(
 );
 
 $button[1] = array(
-	"text_label"=>"This is IO 1",
+	"text_label"=>"This is IO 1.  Click on, click off.",
 	"io"=>"1",
 	"op"=>"button",
 	"w"=>"100",
