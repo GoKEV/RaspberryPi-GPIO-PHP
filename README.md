@@ -121,6 +121,7 @@ After reading Gordon's self-proclaimed rant http://wiringpi.com/wiringpi-depreca
 
 This project was created in 2016 by [Kevin Holmes](http://GoKEV.com/), based on the desire for a simple GPIO interface pane.  It has evolved slightly to adapt for platform changes, but is still the same basic interface it started out to be.
 
+- 2022-04-04  Native BCM pinouts work now.  A variable at the top of api.php defines if you're using the commands for `raspi-gpio` with the native BCM pinouts, or if you're using `gpio` command with WiringPi pinouts.
 - 2022-04-03  Function of momentary buttons is purrty.  It uses a meta-refresh to revert back to the referer page (click the button, reverts back in XX seconds).
 - 2022-04-01  Thorough API documentation added <a href="https://github.com/GoKEV/RaspberryPi-GPIO-PHP/blob/master/files/html/api_doc.txt" target="new_">here</a>.
 - 2022-03-17  I added the functionality for momentary buttons.  They can be configured in the index.php as latching or momentary with a user-defined delay in seconds.  The blue LED doesn't change from the default value.  I'll fix that some day.
